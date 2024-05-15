@@ -1,7 +1,11 @@
 package ru.danilenko.mywarehouse.service.impl;
 
 import org.mapstruct.factory.Mappers;
+
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.danilenko.mywarehouse.dto.ItemDto;
@@ -28,6 +32,26 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getAllItems() {
         return itemRepository.findAll().stream().map(itemMapper::convertToDto).toList();
+    }
+    @Override
+    public List<ItemDto> getSearchedItems(String title,Long price, Boolean priceIsBigger, Boolean inStock, Integer pageNum, Integer itemsPerPage, String sortBy) {
+        if(price == null && inStock == null) {
+            return itemRepository.findByNameStartingWith(title, PageRequest.of(pageNum, itemsPerPage, Sort.by(sortBy))).stream().map(itemMapper::convertToDto).toList();
+        }
+        else if(price != null){
+            if(priceIsBigger == null){
+                return itemRepository.findByPrice(price, PageRequest.of(pageNum, itemsPerPage, Sort.by(sortBy))).stream().map(itemMapper::convertToDto).toList();
+            } else {
+                if(priceIsBigger){
+                    return itemRepository.findByPriceIsGreaterThanEqual(price, PageRequest.of(pageNum, itemsPerPage, Sort.by(sortBy))).stream().map(itemMapper::convertToDto).toList();
+                } else {
+                    return itemRepository.findByPriceIsLessThanEqual(price, PageRequest.of(pageNum, itemsPerPage, Sort.by(sortBy))).stream().map(itemMapper::convertToDto).toList();
+                }
+            }
+        }
+        else {
+            return itemRepository.findByInStock(inStock, PageRequest.of(pageNum, itemsPerPage, Sort.by(sortBy))).stream().map(itemMapper::convertToDto).toList();
+        }
     }
 
     @Override

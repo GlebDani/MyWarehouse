@@ -1,13 +1,14 @@
 package ru.danilenko.mywarehouse.controller;
 
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.danilenko.mywarehouse.dto.BaseResponseDto;
 import ru.danilenko.mywarehouse.dto.ItemDto;
 import ru.danilenko.mywarehouse.service.ItemService;
+
 
 import java.util.List;
 
@@ -25,6 +26,18 @@ public class ItemController {
     @GetMapping("")
     public ResponseEntity<List<ItemDto>> getItems() {
         List<ItemDto> list = itemService.getAllItems();
+        return ResponseEntity.ok(list);
+    }
+    @GetMapping("/search")
+    public ResponseEntity<List<ItemDto>> doSearch(@RequestParam(value = "name",required = false,defaultValue = "") String name,
+                                                  @RequestParam(value = "price",required = false) Long price,
+                                                  @RequestParam(value = "priceIsBigger",required = false) Boolean priceIsBigger,
+                                                  @RequestParam(value = "inStock",required = false) Boolean inStock,
+                                                  @RequestParam(value = "sortBy",required = false, defaultValue = "name") String sortBy,
+                                                  @RequestParam(value = "pageNum",required = false, defaultValue = "0") Integer pageNum,
+                                                  @RequestParam(value = "itemsPerPage",required = false, defaultValue = "10") Integer itemsPerPage
+                                                  ) {
+        List<ItemDto> list = itemService.getSearchedItems(name,price,priceIsBigger,inStock,pageNum,itemsPerPage,sortBy);
         return ResponseEntity.ok(list);
     }
 
