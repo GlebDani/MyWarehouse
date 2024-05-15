@@ -3,7 +3,7 @@
 1. Соберите war файл: maven clean compile
 2. Запустите MyWarehouseApplication
 
-Все эндпоинты представлены ниже.
+Все эндпоинты представлены ниже, а также доступны по "/swagger-ui/index.html".
 
 ![image](https://github.com/GlebDani/MyWarehouse/assets/140164257/397cce81-ebc6-467b-abf4-29b291d1e0b5)
 
