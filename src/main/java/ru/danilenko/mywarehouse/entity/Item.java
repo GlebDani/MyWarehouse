@@ -1,30 +1,39 @@
 package ru.danilenko.mywarehouse.entity;
 
-import jakarta.validation.constraints.*;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "items")
 public class Item {
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
+    @Column(name = "stock_number")
     private String stockNum;
 
-
+    @Column(name = "name")
     private String name;
 
-
+    @Column(name = "description")
     private String description;
 
-    @Builder.Default()
-    private Long price = 0L;
+    @Column(name = "price")
+    private Long price;
 
-    @Builder.Default()
-    private Boolean inStock = false;
+
+    @Column(name = "in_stock")
+    private Boolean inStock;
 
 }

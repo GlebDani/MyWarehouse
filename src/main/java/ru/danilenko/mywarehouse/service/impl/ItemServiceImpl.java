@@ -3,6 +3,7 @@ package ru.danilenko.mywarehouse.service.impl;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.danilenko.mywarehouse.dto.ItemDto;
 import ru.danilenko.mywarehouse.entity.Item;
 import ru.danilenko.mywarehouse.exception.ItemException;
@@ -11,7 +12,6 @@ import ru.danilenko.mywarehouse.repository.ItemRepository;
 import ru.danilenko.mywarehouse.service.ItemService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -38,32 +38,38 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public boolean saveItem(ItemDto itemDto) {
-        itemRepository.findByStockNumber(itemDto.getStockNum()).ifPresent(x -> {throw new ItemException("Товар с таким артикулем уже присутсвует");});
+        itemRepository.findByStockNum(itemDto.getStockNum()).ifPresent(x -> {throw new ItemException("Товар с таким артикулем уже присутсвует");});
         Item item = itemMapper.convertFromDto(itemDto);
-        return itemRepository.save(item);
+        itemRepository.save(item);
+        return true;
     }
 
     @Override
+    @Transactional
     public boolean updateItem(String stockNum, ItemDto itemDto) {
         Item itemToUpdate = getExistedItem(stockNum);
         if(!stockNum.equals(itemDto.getStockNum())){
-            if(itemRepository.findByStockNumber(itemDto.getStockNum()).isPresent()){
+            if(itemRepository.findByStockNum(itemDto.getStockNum()).isPresent()){
                 throw new ItemException("Товар с таким артикулем уже присутсвует");
             }
         }
-        Item updatedItem = itemMapper.convertFromDto(itemDto);
-        updatedItem.setId(itemToUpdate.getId());
-        itemRepository.delete(itemToUpdate);
-        return itemRepository.save(updatedItem);
+        itemToUpdate.setName(itemDto.getName());
+        itemToUpdate.setDescription(itemDto.getDescription());
+        itemToUpdate.setStockNum(itemDto.getStockNum());
+        itemToUpdate.setPrice(itemDto.getPrice());
+        itemToUpdate.setInStock(itemDto.getInStock());
+        itemRepository.save(itemToUpdate);
+        return true;
     }
 
     @Override
     public boolean deleteItem(String stockNum) {
         Item item = getExistedItem(stockNum);
-        return itemRepository.delete(item);
+        itemRepository.delete(item);
+        return true;
     }
 
     private Item getExistedItem(String stockNum){
-        return itemRepository.findByStockNumber(stockNum).orElseThrow(()->new ItemException("Товар с таким артикулем не найден"));
+        return itemRepository.findByStockNum(stockNum).orElseThrow(()->new ItemException("Товар с таким артикулем не найден"));
     }
 }

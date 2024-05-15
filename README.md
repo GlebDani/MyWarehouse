@@ -1,7 +1,8 @@
 # MyWarehouse
 Для запуска приложения:
 1. Соберите war файл: maven clean compile
-2. Запустите MyWarehouseApplication
+2. Запустить Postgres на комьютере, создать database "test_db".
+3. Запустите MyWarehouseApplication
 
 Все эндпоинты представлены ниже, а также доступны по "/swagger-ui/index.html".
 

@@ -19,7 +19,9 @@ public class ItemDto {
     private String description;
 
     @Min(value = 0L, message = "Цена товара не может быть меньше 0")
-    private Long price;
+    @Builder.Default()
+    private Long price = 0L;
 
-    private Boolean inStock;
+    @Builder.Default()
+    private Boolean inStock = false;
 }

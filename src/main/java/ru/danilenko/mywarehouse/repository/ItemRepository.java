@@ -1,18 +1,12 @@
 package ru.danilenko.mywarehouse.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import ru.danilenko.mywarehouse.entity.Item;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface ItemRepository {
-
-    List<Item> findAll();
-
-    Optional<Item> findByStockNumber(String stockNum);
-
-    boolean save(Item item);
-
-    boolean delete(Item item);
-
+@Repository
+public interface ItemRepository extends JpaRepository<Item, Long> {
+    Optional<Item> findByStockNum(String stockNum);
 }

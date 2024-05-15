@@ -1,12 +1,10 @@
 package ru.danilenko.mywarehouse.service;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import ru.danilenko.mywarehouse.dto.ItemDto;
 import ru.danilenko.mywarehouse.entity.Item;
@@ -50,7 +48,7 @@ public class ItemServiceTest {
     @Test
     public void getItemByStockNumberTest() {
         Item item = Item.builder().name("test").build();
-        when(itemRepository.findByStockNumber(anyString())).thenReturn(Optional.ofNullable(item));
+        when(itemRepository.findByStockNum(anyString())).thenReturn(Optional.ofNullable(item));
         assertThat(itemService.getItemByStockNumber("111111").getName()).isEqualTo("test");
 
     }
@@ -59,8 +57,8 @@ public class ItemServiceTest {
     @Test
     public void saveItemTest() {
         ItemDto itemDto = ItemDto.builder().build();
-        when(itemRepository.findByStockNumber(anyString())).thenReturn(Optional.empty());
-        when(itemRepository.save(any(Item.class))).thenReturn(true);
+        when(itemRepository.findByStockNum(anyString())).thenReturn(Optional.empty());
+        when(itemRepository.save(any(Item.class))).thenReturn(any(Item.class));
         assertThat(itemService.saveItem(itemDto)).isTrue();
     }
 
@@ -70,9 +68,8 @@ public class ItemServiceTest {
         String stockNum = "1";
         Item itemToUpdate = Item.builder().stockNum(stockNum).name("test").build();
         ItemDto itemDto = ItemDto.builder().stockNum(stockNum).name("test").build();
-        when(itemRepository.findByStockNumber(anyString())).thenReturn(Optional.ofNullable(itemToUpdate));
-        when(itemRepository.delete(itemToUpdate)).thenReturn(true);
-        when(itemRepository.save(any(Item.class))).thenReturn(true);
+        when(itemRepository.findByStockNum(anyString())).thenReturn(Optional.ofNullable(itemToUpdate));
+        when(itemRepository.save(any(Item.class))).thenReturn(any(Item.class));
         assertThat(itemService.updateItem(stockNum, itemDto)).isTrue();
     }
 
@@ -80,7 +77,7 @@ public class ItemServiceTest {
     @Test
     public void deleteItemTest() {
         Item item = Item.builder().name("test").build();
-        when(itemRepository.findByStockNumber(anyString())).thenReturn(Optional.ofNullable(item));
+        when(itemRepository.findByStockNum(anyString())).thenReturn(Optional.ofNullable(item));
         assertThat(itemService.deleteItem("111111")).isTrue();
     }
 }
