@@ -1,0 +1,11 @@
+version: '3.5'
+
+services:
+  postgres:
+    environment:
+      POSTGRES_USER: myWarehouse
+      POSTGRES_PASSWORD: myWarehouse_11
+      POSTGRES_DB: myWarehouse_db
+    ports:
+      - "5432:5432"
+    image: postgres:16
